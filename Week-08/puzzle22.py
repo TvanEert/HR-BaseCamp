@@ -20,7 +20,7 @@ grid = [
 highest_sum = 0
 
 for row in range(len(grid) - 2):
-    for col in range(len(grid[col]) - 2):
+    for col in range(len(grid[row]) - 2):
         square_sum = sum(sum(row[col:col+3]) for row in grid[row:row+3])
         if square_sum > highest_sum:
             highest_sum = square_sum   

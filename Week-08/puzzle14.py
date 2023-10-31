@@ -112,7 +112,7 @@ for animal in farm:
         value += 700
     elif animal == "🐈":
         value += 100
-    else:
-        pass
+    elif animal == "🐖":
+        value += 300
 
 print(value)
