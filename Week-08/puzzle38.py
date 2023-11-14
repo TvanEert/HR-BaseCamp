@@ -8,7 +8,7 @@ for name in skills1.keys():
     names.append(name)
 
 for name in names:
-    if skills1[name] not in wishlist:
+    if not skills1[name] & wishlist:
         names.remove(name)
         print("removed ", name)
     
