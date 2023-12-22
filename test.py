@@ -1,14 +1,17 @@
-import math
+# class Car:
+#     def __init__(self, brand, model, color, price):
+#         self.brand = brand
+#         self.model = model
+#         self.color = color
+#         self.price = price
 
-def is_perfect_square(num):
-    if num < 0:
-        return False
+#     def info(self):
+#         return self.brand
 
-    square_root = math.isqrt(num)
+# car1 = Car("BMW", "X5", "Blue", 32000)
+# car2 = Car("Ferrari", "458", "Yellow", 210000)
 
-    if square_root * square_root == num:
-        return True
-    else:
-        return False
-    
-print(is_perfect_square(5))
+# print(car1.info())
+# print(car2.info())
+
+

@@ -7,10 +7,10 @@ def juggler_sequence(number):
 
     while number != 1:
         if number % 2 == 0:
-            number = int(pow(number, 0.5))
+            number = round(number**(1/2))
             sequence.append(number)
         else:
-            number = int(pow(number, 1.5))
+            number = round(number**(3/2))
             sequence.append(number)
     
     return sequence
@@ -21,5 +21,5 @@ for i in range(2,100000):
     if len(sequence) == 51:
         correct_sequence = sequence
         break
-
+    
 print(correct_sequence, "correct")

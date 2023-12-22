@@ -18,6 +18,11 @@ for combination in combinations:
     else:
         n+=1
 
+for name in names:
+    if not skills1[name] & wishlist:
+        names.remove(name)
+        print("removed ", name)
+    
+for name in names:
+    print(skills1[name])
 
-print(n)     
-print(check)
