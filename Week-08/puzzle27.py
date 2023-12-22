@@ -3,7 +3,7 @@ import string
 alphabet = string.ascii_uppercase
 
 def decrypt():
-    encrypted_message = "CIJLRMAQFUPVEKHSMUEZFULZGLYFWJOSVMJNFGAXWNARWQFOFGDXKFQ"
+    encrypted_message = "CDEFGHIJKLMNOPQRSTUVWXYZA"
     for key in range(1,27):
 
         

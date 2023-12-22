@@ -13,7 +13,12 @@ Emails: <email_1>, <email_2>
 Phone numbers: <number_1>, <number_2>
 '''
 def display(addressbook: list):
-    print(addressbook)
+    for address in addressbook:
+        emails = str(address.get('emails')).strip("[]").replace("'","")
+        phone_numbers = str(address.get('phone_numbers')).strip("[]").replace("'","")
+        print("======================================")
+        print(f"Position: {address.get('id')}\nFirst name: {address.get('first_name')}\nLast name: {address.get('last_name')}")
+        print(f"Emails: {emails}\nPhone numbers: {phone_numbers}")
 
 
 '''
@@ -21,12 +26,12 @@ return list of contacts sorted by first_name or last_name [if blank then unsorte
 '''
 def list_contacts(addressbook: list):
     # todo: implement this function
-    sort = input("Sort by:")
-    addressbook.sort(key = lambda x: x["first_name"])
+    print("Sort options are first_name and last_name if left blank contacts will be unsorted.")
+    sort = input("Sort by: ")
+    if sort == "first_name" or sort == "last_name":
+        addressbook.sort(key = lambda x: x[sort])
    
     return addressbook
-
-
 '''
 add new contact:
 - first_name
@@ -34,27 +39,69 @@ add new contact:
 - emails = {}
 - phone_numbers = {}
 '''
-def add_contact():
+def add_contact(addressbook, filename):
     # todo: implement this function
-    ...
-
+    first_name = input("First name: ")
+    last_name = input("Last name: ")
+    print("Emails and phone numbers should be separated by ,")
+    emails = input("Emails: ").split(",")
+    phone_numbers = input("Phone numbers:").split(",")
+    if len(addressbook) == 0:
+        contact_id = 1
+    else:
+        contact_id = max(contact["id"] for contact in addressbook) + 1
+    contact = {
+        "id": contact_id,
+        "first_name": first_name,
+        "last_name": last_name,
+        "emails": emails,
+        "phone_numbers": phone_numbers
+    }
+    addressbook.append(contact)
+    write_to_json(filename, addressbook)
 
 '''
 remove contact by ID (integer)
 '''
-def remove_contact():
+def remove_contact(id, addressbook, filename):
     # todo: implement this function
-    ...
-
+    for list_index in range(len(addressbook)):
+        if addressbook[list_index]['id'] == int(id):
+            del addressbook[list_index]
+            break
+    write_to_json(filename, addressbook)
 
 '''
 merge duplicates (automated > same fullname [firstname & lastname])
 '''
-def merge_contacts():
+def merge_contacts(addressbook, filename):
     # todo: implement this function
-    ...
+    duplicates = []
 
+    for contact_main in addressbook:
+        if not  any(contact_main["id"] in duplicate for duplicate in duplicates):
+            for contact_dupelicate in addressbook:
+                if contact_main["first_name"] == contact_dupelicate["first_name"] and contact_main["id"] != contact_dupelicate["id"]:
+                    if contact_main["last_name"] == contact_dupelicate["last_name"] and contact_main["id"] != contact_dupelicate["id"]:
+                        duplicates.append([contact_main["id"], contact_dupelicate["id"]])
 
+    for duplicate in duplicates:
+        for list_index in range(len(addressbook)):
+            if addressbook[list_index]['id'] == duplicate[0]:
+                main_contact = addressbook[list_index]
+            elif addressbook[list_index]['id'] == duplicate[1]:
+                duplicate_contact = addressbook[list_index]
+                for email in duplicate_contact["emails"]:
+                    if email not in main_contact["emails"]:
+                        main_contact["emails"].append(email)
+                for phone_number in duplicate_contact["phone_numbers"]:
+                    if phone_number not in main_contact["phone_numbers"]:
+                        main_contact["phone_numbers"].append(phone_number)
+                remove_contact(duplicate[1], addressbook, filename)
+                break
+    write_to_json(filename, addressbook)
+
+    
 '''
 read_from_json
 Do NOT change this function
@@ -106,14 +153,15 @@ def main(json_file):
             "[Q] Quit program\n")
         operation_call = input("Select your operation: ").lower()
         if operation_call   == "l":
-            addressbook = list_contacts(addressbook)
+            ##addressbook = list_contacts(addressbook)
             display(addressbook)
         elif operation_call == "a":
-            add_contact()
+            add_contact(addressbook, json_file)
         elif operation_call == "r":
-            remove_contact()
+            contact_id = input("What is the ID of the contact you want to remove: ")
+            remove_contact(contact_id, addressbook, json_file)
         elif operation_call == "m":
-            merge_contacts()
+            merge_contacts(addressbook, json_file)
         elif operation_call == "q":
             running = False
         else:

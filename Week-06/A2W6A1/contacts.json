@@ -8,8 +8,8 @@
             "c.kent@dailyplanet.work"
         ],
         "phone_numbers": [
-            "0881234567",
-            "0101234567"
+            "0101234567",
+            "0881234567"
         ]
     },
     {
@@ -29,11 +29,12 @@
         "first_name": "James",
         "last_name": "Doe",
         "emails": [
-            "james.doe@work.mail"
+            "james.doe@work.mail",
+            "james.doe@private.mail"
         ],
         "phone_numbers": [
-            "0612345678",
-            "0201234567"
+            "0201234567",
+            "0612345678"
         ]
     }
 ]
