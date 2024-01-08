@@ -114,7 +114,6 @@ def main(json_file):
               "[Q] Quit program\n")
         operation_call = input("Select your operation: ").lower()
         if operation_call == "l":
-        if operation_call   == "l":
             ##addressbook = list_contacts(addressbook)
             display(addressbook)
         elif operation_call == "a":

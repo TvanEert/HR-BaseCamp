@@ -3,13 +3,15 @@ from datetime import datetime
 
 
 class CarParkingLogger():
-    def __init__(self, id:str):
+    def __init__(self, id: str):
         self.id = id
+        carpark_file = open(os.path.join(os.getcwd(), "carparklog.txt"), "a")
+        carpark_file.close()
 
-    def restore_state(self, machine_id:str):
+    def restore_state(self, machine_id: str):
         restored_cars_parked = {}
 
-        with open(os.path.join(os.getcwd(),"carparklog.txt"), 'r') as carkpark_file:
+        with open(os.path.join(os.getcwd(), "carparklog.txt"), 'r') as carkpark_file:
             lines = carkpark_file.readlines()
             for line in lines:
                 split_line = line.strip().split(";")
@@ -24,35 +26,56 @@ class CarParkingLogger():
                         restored_cars_parked.pop(license_plate)
 
         return restored_cars_parked
-    
-    def get_total_car_fee(license_plate):
+
+    def get_total_car_fee(self, license_plate: str):
         fee = 0
 
-        with open(os.path.join(os.getcwd(),"carparklog.txt"), 'r') as carkpark_file:
+        with open(os.path.join(os.getcwd(), "carparklog.txt"), 'r') as carkpark_file:
             lines = carkpark_file.readlines()
             for line in lines:
                 split_line = line.strip().split(";")
-                license_plate = split_line[2].replace("license_plate=", "")
+                license_plate_log = split_line[2].replace("license_plate=", "")
+                action = split_line[3].replace("action=", "")
+                if license_plate_log == license_plate and action == "check-out":
+                    fee += float(split_line[4].replace("parking_fee=", ""))
 
+        total_fee = fee
         return total_fee
 
-    def log_check_in(self, check_in:datetime, carpark_id:str, lisence:str):
+    def get_machine_fee_by_day(self, car_parking_machine_id: str, search_date: str):
+        fee = 0
+
+        with open(os.path.join(os.getcwd(), "carparklog.txt"), 'r') as carkpark_file:
+            lines = carkpark_file.readlines()
+            for line in lines:
+                split_line = line.strip().split(";")
+                date = split_line[0].split(" ")[0]
+                if date == search_date:
+                    car_parking_machine_id_log = split_line[1].replace("cpm_name=", "")
+                    action = split_line[3].replace("action=", "")
+                    if car_parking_machine_id == car_parking_machine_id_log and action == "check-out":
+                        fee += float(split_line[4].replace("parking_fee=", ""))
+
+        total_fee = fee
+        return round(total_fee, 2)
+
+    def log_check_in(self, check_in: datetime, carpark_id: str, lisence: str):
         if self.id == carpark_id:
             check_in = datetime.strftime(check_in, '%d-%m-%Y %H:%M:%S')
-            carpark_file = open(os.path.join(os.getcwd(),"carparklog.txt"), "a")
+            carpark_file = open(os.path.join(os.getcwd(), "carparklog.txt"), "a")
             carpark_file.write(f"{check_in};cpm_name={carpark_id};license_plate={lisence};action=check-in\n")
             carpark_file.close()
-        else: 
+        else:
             print("id mismatch")
 
-    def log_check_out(self, check_in:datetime, carpark_id:str, lisence:str, parking_fee:float):
+    def log_check_out(self, check_in: datetime, carpark_id: str, lisence: str, parking_fee: float):
         if self.id == carpark_id:
             check_in = datetime.strftime(check_in, '%d-%m-%Y %H:%M:%S')
-            carpark_file = open(os.path.join(os.getcwd(),"carparklog.txt"), "a")
-            carpark_file.write(f"{check_in};cpm_name={carpark_id};license_plate={lisence};"\
+            carpark_file = open(os.path.join(os.getcwd(), "carparklog.txt"), "a")
+            carpark_file.write(f"{check_in};cpm_name={carpark_id};license_plate={lisence};"
                                f"action=check-out;parking_fee={parking_fee}\n")
             carpark_file.close()
-        else: 
+        else:
             print("id mismatch")
 
 
@@ -107,7 +130,7 @@ class ParkedCar():
 
 def main():
     carp_park = CarParkingMachine("Machine1")
-    
+
     running = True
 
     while running:
