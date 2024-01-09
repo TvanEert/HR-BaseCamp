@@ -1,6 +1,6 @@
 from datetime import datetime
 from skater import Skater
-from track import Track 
+from track import Track
 
 class Event:
 
@@ -19,7 +19,7 @@ class Event:
         pass
 
 
-    def get_skater(self) -> list[Skater]:
+    def get_skaters(self) -> list[Skater]:
         pass
 
 
@@ -27,7 +27,7 @@ class Event:
         pass
 
 
-    def conver_date(to_format: str) -> str:
+    def convert_date(to_format: str) -> str:
         pass
 
 
