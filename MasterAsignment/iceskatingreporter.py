@@ -2,12 +2,21 @@ from track import Track
 from event import Event
 from skater import Skater
 from datetime import datetime
+import sqlite3
 
 
 class Reporter:
     # How many skaters are there? -> int
     def total_amount_of_skaters(self) -> int:
-        pass
+        con = sqlite3.connect("iceskatingapp.db")
+        cur = con.cursor()
+
+        skaters = cur.execute("SELECT * FROM skaters")
+        skaters = skaters.fetchall()
+
+        con.close()
+
+        return len(skaters)
 
     # What is the highest track? -> Track
     def highest_track(self) -> Track:
@@ -47,7 +56,8 @@ class Reporter:
     # otherwise it should just return the value as tuple(Skater, ...)
     # CSV example (this are also the headers):
     #   id, first_name, last_name, nationality, gender, date_of_birth
-    def get_skaters_that_skated_track_between(self, track: Track, start: datetime, end: datetime, to_csv: bool = False) -> tuple[Skater, ...]:
+    def get_skaters_that_skated_track_between(self, track: Track, start: datetime,
+                                              end: datetime, to_csv: bool = False) -> tuple[Skater, ...]:
         pass
 
     # Which tracks are located in country X? ->tuple[Track, ...]

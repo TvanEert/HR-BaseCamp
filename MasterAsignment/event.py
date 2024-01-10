@@ -1,39 +1,65 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from skater import Skater
 from track import Track
+import sqlite3
+
 
 class Event:
 
-    def __init__(self, id: int, name:str, track_id: int, date: datetime, distance: int, duration: float, laps: int, winner: int, category: str) -> None:
+    def __init__(self, id: int, name: str, track_id: int, date: datetime, distance: int, duration: float,
+                 laps: int, winner: int, category: str) -> None:
         self.id = id
         self.name = name
         self.track_id = track_id
-        self.date = datetime
+        if date is None:
+            self.date = datetime.today()
+        else:
+            self.date = datetime.strptime(date, '%Y-%m-%d')
         self.distance = distance
         self.duration = duration
         self.winner = winner
         self.category = category
 
-    
     def add_skater(self, skater: Skater) -> None:
         pass
 
+    def get_skaters(self) -> list:
+        skaters = []
 
-    def get_skaters(self) -> list[Skater]:
-        pass
+        con = sqlite3.connect("iceskatingapp.db")
+        cur = con.cursor()
 
+        skater_ids = cur.execute("SELECT * FROM event_skaters WHERE event_skaters.event_id = :event_id",
+                                {"event_id": self.id})
+        skater_ids = skater_ids.fetchall()
 
-    def get_track() -> Track:
-        pass
+        for skater_id in skater_ids:
+            skater = cur.execute("SELECT * FROM skaters WHERE skaters.id = :skater_id", {"skater_id": skater_id[0]})
+            skater = skater.fetchone()
+            skaters.append(skater)
 
+        con.close()
 
-    def convert_date(to_format: str) -> str:
-        pass
+        return skaters
 
+    def get_track(self) -> Track:
+        con = sqlite3.connect("iceskatingapp.db")
+        cur = con.cursor()
 
-    def convert_duration(to_format: str) -> str:
-        pass
+        track = cur.execute("SELECT * FROM tracks WHERE tracks.id = :track_id", {"track_id": self.track_id})
+        track = track.fetchone()
 
+        con.close()
+
+        track = Track(*track)
+
+        return track
+
+    def convert_date(self, to_format: str) -> str:
+        return self.date.strftime(to_format)
+
+    def convert_duration(self, to_format: str) -> str:
+        print(datetime.timedelta(self.duration))
 
     # Representation method
     # This will format the output in the correct order

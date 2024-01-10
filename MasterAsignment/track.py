@@ -1,3 +1,6 @@
+import sqlite3
+
+
 class Track:
 
     def __init__(self, id: int, name: str, city: str, country: str, outdoor: bool, altitude: int) -> None:
@@ -8,10 +11,16 @@ class Track:
         self.outdoor = outdoor
         self.altitude = altitude
 
-
     def get_events(self) -> list:
-        pass
+        con = sqlite3.connect("iceskatingapp.db")
+        cur = con.cursor()
 
+        events = cur.execute("SELECT * FROM events WHERE events.track_id = :track_id", {"track_id": self.id})
+        events = events.fetchall()
+
+        con.close()
+
+        return events
 
     # Representation method
     # This will format the output in the correct order
