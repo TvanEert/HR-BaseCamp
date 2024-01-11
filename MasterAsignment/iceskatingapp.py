@@ -64,6 +64,7 @@ def fill_events_table(con, cur):
     print("Filling events table...")
     json_data = read_json_file("events.json")
     for event in json_data:
+        duration = convert_time_to_float(event["results"][0]["time"])
         cur.execute("""INSERT INTO events VALUES (:id, :name,
                     :track_id, :date, :distance, :duration,
                     :laps, :winner, :catagory)
@@ -73,7 +74,7 @@ def fill_events_table(con, cur):
                      "track_id": event["track"]["id"],
                      "date": event["start"],
                      "distance": event["distance"]["distance"],
-                     "duration": event["results"][0]["time"],
+                     "duration": duration,
                      "laps": event["distance"]["lapCount"],
                      "winner": event["results"][0]["skater"]["firstName"] +
                      " " + event["results"][0]["skater"]["lastName"],
@@ -112,8 +113,17 @@ def fill_event_skaters_table(con, cur):
                          "event_id": event["id"]})
 
     con.commit()
-
-
+    
+def convert_time_to_float(duration: str) -> float:
+    if ":" in duration:
+        duration = duration.split(":")
+        min_to_sec = int(duration[0]) * 60
+        time_in_float = float(duration[1]) + min_to_sec
+    else:
+        time_in_float = float(duration)
+    return time_in_float
+    
+    
 def read_json_file(file_name):
     with open(file_name, "r") as file:
         json_data = json.load(file)
@@ -133,13 +143,12 @@ def main():
     # track = Track(29, None, None, None, None, None)
     # print(len(track.get_events()))
 
-    # event = Event(1, "Essent ISU World Cup - 1500m Men Division A", 29, "2003-11-8", 1500, 107.370, 4, "Erben Wennemars", "M")
+    event = Event(1, "Essent ISU World Cup - 1500m Men Division A", 29, "2003-11-8", 1500, 107.370, 4, "Erben Wennemars", "M")
     
-    # print(event.get_track())
-    # print(event.convert_date("%d-%m-%Y"))
+    print(event.convert_duration("%M:%S"))
 
     reporter = Reporter()
-    print(reporter.total_amount_of_skaters())
+    print(reporter.highest_track())
 
 if __name__ == "__main__":
     main()

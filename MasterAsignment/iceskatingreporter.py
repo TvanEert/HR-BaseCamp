@@ -11,8 +11,7 @@ class Reporter:
         con = sqlite3.connect("iceskatingapp.db")
         cur = con.cursor()
 
-        skaters = cur.execute("SELECT * FROM skaters")
-        skaters = skaters.fetchall()
+        skaters = cur.execute("SELECT * FROM skaters").fetchall()
 
         con.close()
 
@@ -20,7 +19,14 @@ class Reporter:
 
     # What is the highest track? -> Track
     def highest_track(self) -> Track:
-        pass
+        con = sqlite3.connect("iceskatingapp.db")
+        cur = con.cursor()
+        
+        track = cur.execute("SELECT * FROM tracks ORDER BY altitude DESC").fetchone()
+        
+        con.close()
+        
+        return Track(*track)
 
     # What is the longest and shortest event? -> tuple[Event, Event]
     def longest_and_shortest_event(self) -> tuple[Event, Event]:

@@ -59,7 +59,16 @@ class Event:
         return self.date.strftime(to_format)
 
     def convert_duration(self, to_format: str) -> str:
-        print(datetime.timedelta(self.duration))
+        if to_format == "%M:%S":
+            min = str(int(self.duration) // 60).zfill(2)
+            sec  = int(self.duration) % 60
+            return f"{min}:{sec}"
+        elif to_format == "%S":
+            return str(int(self.duration))
+        elif to_format == "%M":
+            return str(int(self.duration) // 60).zfill(2)
+
+
 
     # Representation method
     # This will format the output in the correct order

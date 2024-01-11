@@ -1,11 +1,14 @@
 from skater import Skater
 from event import Event
 from track import Track
+from datetime import datetime
 
 
 # Test to check if the age of a skater is correct based on the date_of_birth
 def test_age_of_skater():
-    raise NotImplementedError()
+    skater = Skater(32, "Tim", "van Eert", "NL", "M", datetime(2002, 8, 7))
+    
+    assert 21 == skater.get_age(datetime(2024, 11, 1))
 
 
 # Test to check if the amount of events for a specific skater is returned correctly
@@ -36,3 +39,6 @@ def test_amount_of_skaters_on_event():
 # Test to validate if the given track of a specified event is correct
 def test_track_on_event():
     raise NotImplementedError()
+
+
+test_age_of_skater()

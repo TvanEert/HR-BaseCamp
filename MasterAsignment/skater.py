@@ -34,7 +34,8 @@ class Skater:
         event_ids = event_ids.fetchall()
 
         for event_id in event_ids:
-            event = cur.execute("SELECT * FROM events WHERE events.id = :event_id", {"event_id": event_id[1]})
+            event = cur.execute("SELECT * FROM events WHERE events.id = :event_id",
+                                {"event_id": event_id[1]})
             event = event.fetchone()
             events.append(event)
 
