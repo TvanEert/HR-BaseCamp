@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from skater import Skater
 from track import Track
 import sqlite3
@@ -12,11 +12,12 @@ class Event:
         self.name = name
         self.track_id = track_id
         if date is None:
-            self.date = datetime.today()
+            self.date = datetime.today().date()
         else:
-            self.date = datetime.strptime(date, '%Y-%m-%d')
+            self.date = datetime.strptime(date, '%Y-%m-%d').date()
         self.distance = distance
         self.duration = duration
+        self.laps = laps
         self.winner = winner
         self.category = category
 
@@ -30,7 +31,7 @@ class Event:
         cur = con.cursor()
 
         skater_ids = cur.execute("SELECT * FROM event_skaters WHERE event_skaters.event_id = :event_id",
-                                {"event_id": self.id})
+                                 {"event_id": self.id})
         skater_ids = skater_ids.fetchall()
 
         for skater_id in skater_ids:
@@ -61,14 +62,12 @@ class Event:
     def convert_duration(self, to_format: str) -> str:
         if to_format == "%M:%S":
             min = str(int(self.duration) // 60).zfill(2)
-            sec  = int(self.duration) % 60
+            sec = int(self.duration) % 60
             return f"{min}:{sec}"
         elif to_format == "%S":
             return str(int(self.duration))
         elif to_format == "%M":
             return str(int(self.duration) // 60).zfill(2)
-
-
 
     # Representation method
     # This will format the output in the correct order

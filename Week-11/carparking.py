@@ -1,20 +1,12 @@
 import os
-import json
 from datetime import datetime
 
 
 class CarParkingLogger():
     def __init__(self, id: str):
         self.id = id
-        carpark_file_txt = open(os.path.join(os.getcwd(), "carparklog.txt"), "a")
-        carpark_file_txt.close()
-        empty = {
-            "state": [
-
-            ]
-        }
-        with open(f"{self.id}_state.json", "w") as json_file:
-            json.dump(empty, json_file)
+        carpark_file = open(os.path.join(os.getcwd(), "carparklog.txt"), "a")
+        carpark_file.close()
 
     def restore_state(self, machine_id: str):
         restored_cars_parked = {}
@@ -73,15 +65,6 @@ class CarParkingLogger():
             carpark_file = open(os.path.join(os.getcwd(), "carparklog.txt"), "a")
             carpark_file.write(f"{check_in};cpm_name={carpark_id};license_plate={lisence};action=check-in\n")
             carpark_file.close()
-            check_in_data = {
-                "license_plate": f"{lisence}",
-                "check_in": f"{check_in}"
-            },
-            with open(f"{self.id}_state.json", "r+") as json_file:
-                file_data = json.load(json_file)
-                file_data["state"].append(check_in_data)
-                json_file.seek(0)
-                json.dump(file_data, json_file, indent=4)
         else:
             print("id mismatch")
 
@@ -97,7 +80,6 @@ class CarParkingLogger():
 
 
 class CarParkingMachine():
-
     def __init__(self, id: str, capacity=10, hourly_rate=2.50, parked_cars=None):
         if parked_cars is None:
             parked_cars = {}
@@ -147,7 +129,7 @@ class ParkedCar():
 
 
 def main():
-    carp_park = CarParkingMachine("test")
+    carp_park = CarParkingMachine("Machine1")
 
     running = True
 
@@ -162,8 +144,6 @@ def main():
             lisence = input("Input your lisence plate: ")
             if carp_park.check_in(lisence):
                 print("License registered")
-            elif carp_park.check_in(lisence) == "lisence already checked in":
-                return False
             elif not carp_park.check_in(lisence):
                 print("Capacity reached")
         elif operation.lower() == "o":

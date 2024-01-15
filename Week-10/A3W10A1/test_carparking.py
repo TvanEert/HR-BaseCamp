@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 # Test for a normal check-in with correct result (True)
 def test_check_in_capacity_normal():
-    car_park = CarParkingMachine()
+    car_park = CarParkingMachine("south")
 
     if car_park.check_in("AA-123-A"): return True
     else: return False

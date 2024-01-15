@@ -120,17 +120,17 @@ def main(hash_key):
     print("[Q] Quit program")
 
     while running:
-        operation = get_input("Operation: ").lower()
+        operation = input("Operation: ").lower()
 
         if operation == "e":
-            encode_value = get_input("Value: ")
+            encode_value = input("Value: ")
             if "," in encode_value:
                 encode_value_list = encode_value.split(", ")
                 encode_list(encode_value_list)
             else:
                 encode_string(encode_value)
         elif operation == "d":
-            decode_value = get_input("Value: ")
+            decode_value = input("Value: ")
             if "," in decode_value:
                 decode_value_list = decode_value.split(", ")
                 decode_list(decode_value_list)
@@ -144,8 +144,8 @@ def main(hash_key):
             for value in decoded_values:
                 print(value)
         elif operation == "v":
-            encode_value = get_input("Encoded value: ")
-            decode_value = get_input("Decoded value: ")
+            encode_value = input("Encoded value: ")
+            decode_value = input("Decoded value: ")
             validated = validate_values(encode_value, decode_value)
             if validated:
                 print("True")
@@ -157,8 +157,7 @@ def main(hash_key):
 
 # Create a unittest for both the encode and decode function (see test_namehasher.py file for boilerplate)
 if __name__ == "__main__":
-    get_input = lambda question: input(question)
-    key = get_input("key: ")
+    key = input("key: ")
     if len(key) % 2 == 0:
         main(key)
     else:

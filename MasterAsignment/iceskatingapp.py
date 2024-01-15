@@ -1,11 +1,5 @@
 import json
 import sqlite3
-from datetime import datetime
-
-from skater import Skater
-from track import Track
-from event import Event
-from iceskatingreporter import Reporter
 
 
 def is_db_empty(con, cur):
@@ -21,7 +15,7 @@ def is_db_empty(con, cur):
                                   (SELECT id FROM events WHERE
                                   events.id = 0 OR events.id > 0)""")
     if is_events_empty.fetchone() is None:
-       fill_events_table(con, cur)
+        fill_events_table(con, cur)
     else:
         print("events table already populated")
 
@@ -29,7 +23,7 @@ def is_db_empty(con, cur):
                                    (SELECT id FROM skaters WHERE
                                    skaters.id = 0 OR skaters.id > 0)""")
     if is_skaters_empty.fetchone() is None:
-       fill_skaters_table(con, cur)
+        fill_skaters_table(con, cur)
     else:
         print("skaters table already populated")
 
@@ -37,7 +31,7 @@ def is_db_empty(con, cur):
                                          (SELECT skater_id FROM event_skaters WHERE
                                          event_skaters.skater_id = 0 OR event_skaters.skater_id > 0)""")
     if is_event_skaters_empty.fetchone() is None:
-       fill_event_skaters_table(con, cur)
+        fill_event_skaters_table(con, cur)
     else:
         print("event_skater table already populated")
 
@@ -76,8 +70,7 @@ def fill_events_table(con, cur):
                      "distance": event["distance"]["distance"],
                      "duration": duration,
                      "laps": event["distance"]["lapCount"],
-                     "winner": event["results"][0]["skater"]["firstName"] +
-                     " " + event["results"][0]["skater"]["lastName"],
+                     "winner": event["results"][0]["skater"]["id"],
                      "catagory": event["category"]})
 
     con.commit()
@@ -113,7 +106,8 @@ def fill_event_skaters_table(con, cur):
                          "event_id": event["id"]})
 
     con.commit()
-    
+
+
 def convert_time_to_float(duration: str) -> float:
     if ":" in duration:
         duration = duration.split(":")
@@ -122,8 +116,8 @@ def convert_time_to_float(duration: str) -> float:
     else:
         time_in_float = float(duration)
     return time_in_float
-    
-    
+
+
 def read_json_file(file_name):
     with open(file_name, "r") as file:
         json_data = json.load(file)
@@ -137,18 +131,6 @@ def main():
     is_db_empty(con, cur)
     con.close()
 
-    # tim = Skater(32, "Tim", "van Eert", "NL", "M", datetime(2002, 8, 7))
-    # print(len(tim.get_events()))
-
-    # track = Track(29, None, None, None, None, None)
-    # print(len(track.get_events()))
-
-    event = Event(1, "Essent ISU World Cup - 1500m Men Division A", 29, "2003-11-8", 1500, 107.370, 4, "Erben Wennemars", "M")
-    
-    print(event.convert_duration("%M:%S"))
-
-    reporter = Reporter()
-    print(reporter.highest_track())
 
 if __name__ == "__main__":
     main()
